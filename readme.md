@@ -28,7 +28,7 @@ This Python project is designed to process text files, summarize their content, 
 
 Before running the script, confirm that the required append information is present in the `append.txt` file.
 
-# Guide to run the pipeline
+# Usage Guide
 
 ## Step 1: Clone the repository
 
@@ -39,20 +39,26 @@ git clone
 ### Or download the zip file and extract it.
 
 ```bash
-wget <zip-file-url>  # or use your browser to download
+https://codeload.github.com/asadali27232/ETL_Pipeline/zip/refs/heads/main
 
 ```
 
 ## Step 2 Setup python 3.12.x
 
 ```bash
-https://www.python.org/downloads/
+https://www.python.org/downloads/release/python-3127/
 ```
 
 ## Step 3: Install the required packages
 
 ```bash
 pip install -r requirements.txt
+```
+
+## Step 4: Get the Gemini API key from the following link
+
+```bash
+https://aistudio.google.com/app/apikey
 ```
 
 ## Step 4: Run the pipeline
