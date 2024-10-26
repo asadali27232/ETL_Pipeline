@@ -25,7 +25,7 @@
 
     "Location/Campus": "The physical location or campus where the course is offered. This can include a specific campus name (e.g., 'Main Campus') or the city where it is located (e.g., 'New York City'). If the location is not clearly stated, attempt to deduce it from related information. If no location can be identified, write 'NA'.",
 
-    "Annual Tuition Fee": "The yearly tuition cost for the course specifically for international students in the 2025/26 academic year, detailing both Full-time and Part-time rates. Write the fees in the respective currency. If not mentioned, mark it as 'NA'.",
+    "Annual Tuition Fee": "The yearly tuition cost for the course specifically for international students in the 2025/26 academic year, detailing both Full-time and Part-time in a single line. Write the fees in the respective currency. If not mentioned, mark it as 'NA'.",
 
     "Initial Deposit": "The required initial fee for admission to the course. If not applicable, indicate the fee in the respective currency or write 'NA'.",
 

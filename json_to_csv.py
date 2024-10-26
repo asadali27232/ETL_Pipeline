@@ -46,7 +46,7 @@ def process(json_folder="jsons", csv_filename="output.csv", reference_file="prom
     temp_csv_filename = "temp_output.csv"
     with open(temp_csv_filename, mode="w", newline="", encoding="utf-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=reference_keys)
-        writer.writeheader()
+        writer.writeheader()  # Write header to temporary CSV
 
         # Iterate through all JSON files in the folder
         for filename in os.listdir(json_folder):
@@ -111,8 +111,9 @@ def process(json_folder="jsons", csv_filename="output.csv", reference_file="prom
     # If the temporary CSV has data, append it to the existing output CSV
     if os.path.exists(temp_csv_filename):
         temp_df = pd.read_csv(temp_csv_filename)
-        temp_df.to_csv(csv_filename, mode='a', header=False,
-                       index=False)  # Append without header
+        # If the output CSV doesn't exist, create it with the header
+        temp_df.to_csv(csv_filename, mode='a', header=not os.path.exists(
+            csv_filename), index=False)  # Append without header if it exists
 
     # Remove the temporary CSV file
     os.remove(temp_csv_filename)

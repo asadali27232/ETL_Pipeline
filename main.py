@@ -37,7 +37,7 @@ csv_filename = re.sub(r'[^a-zA-Z0-9 ]', '', str(input(
 csv_filename = csv_filename + ' Courses.csv'
 
 append.append_to_txts()
-print(f"CSV filename set to: {csv_filename}.csv")
+print(f"CSV filename set to: {csv_filename}")
 
 
 # Create directories if they don't exist
