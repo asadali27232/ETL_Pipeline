@@ -34,7 +34,7 @@ def process(json_folder="jsons", csv_filename="Courses.csv", reference_file="pro
     # Open the CSV file to write data
     # Use a temporary CSV file to handle duplicates
     temp_csv_filename = "temp_output.csv"
-    with open(temp_csv_filename, mode="w", newline="", encoding="utf-8") as csv_file:
+    with open(temp_csv_filename, mode="a", newline="", encoding="utf-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=reference_keys)
         writer.writeheader()
 
