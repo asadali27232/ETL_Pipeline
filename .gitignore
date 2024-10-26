@@ -15,11 +15,28 @@ env/
 
 # Data files
 *.csv
-*.json
-*.txt
+
 
 # IDE and editor settings
 .vscode/
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+
+txts/
+jsons/
+txt_processed/
+json_processed/
+
+txts
+jsons
+txt_processed
+json_processed
+
+/txts
+/jsons
+/txt_processed
+/json_processed
+
+.env
