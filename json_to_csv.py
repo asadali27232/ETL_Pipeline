@@ -6,7 +6,7 @@ import pandas as pd
 from collections import OrderedDict
 
 
-def process(json_folder="jsons", csv_filename="Courses.csv", reference_file="prompt.json"):
+def process(json_folder="jsons", csv_filename="output.csv", reference_file="prompt.json"):
     """
     Convert multiple JSON files in a folder into a single CSV file using a reference file's keys as headers.
     Only files with matching keys will be processed, and processed files are moved to an existing `json_processed` folder.
@@ -31,10 +31,20 @@ def process(json_folder="jsons", csv_filename="Courses.csv", reference_file="pro
     os.makedirs(txt_processed_folder, exist_ok=True)
     os.makedirs(txts_folder, exist_ok=True)
 
-    # Open the CSV file to write data
-    # Use a temporary CSV file to handle duplicates
+    # Prepare a set for existing entries to avoid duplicates
+    existing_data = set()
+
+    # Check if the CSV file already exists and load existing entries
+    if os.path.exists(csv_filename):
+        with open(csv_filename, mode='r', encoding='utf-8') as csv_file:
+            reader = csv.reader(csv_file)
+            next(reader)  # Skip header
+            # Assumes the first column is the unique identifier
+            existing_data.update(row[0] for row in reader)
+
+    # Open a temporary CSV file to write data for the current run
     temp_csv_filename = "temp_output.csv"
-    with open(temp_csv_filename, mode="a", newline="", encoding="utf-8") as csv_file:
+    with open(temp_csv_filename, mode="w", newline="", encoding="utf-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=reference_keys)
         writer.writeheader()
 
@@ -75,9 +85,16 @@ def process(json_folder="jsons", csv_filename="Courses.csv", reference_file="pro
                 ordered_data = OrderedDict(
                     (key, f'"{json_data.get(key, "")}"') for key in reference_keys)
 
-                # Write each JSON dictionary as a row in the CSV file
+                # Check if this entry is already in existing data
+                # Assumes first key is the unique identifier
+                unique_identifier = ordered_data[reference_keys[0]]
+                if unique_identifier in existing_data:
+                    print(f"Skipping duplicate entry for: {unique_identifier}")
+                    continue
+
+                # Write each JSON dictionary as a row in the temporary CSV file
                 writer.writerow(ordered_data)
-                print(f"Processed and added '{filename}' to CSV.")
+                print(f"Processed and added '{filename}' to temporary CSV.")
 
                 # Move processed file to the json_processed folder
                 try:
@@ -91,15 +108,16 @@ def process(json_folder="jsons", csv_filename="Courses.csv", reference_file="pro
                     print(f"FileNotFoundError: {
                           e} - Could not find destination path.")
 
-    # Remove duplicates from the temporary CSV based on the first column
-    df = pd.read_csv(temp_csv_filename)
-    df.drop_duplicates(subset=[df.columns[0]], inplace=True)
-    df.to_csv(csv_filename, index=False)
+    # If the temporary CSV has data, append it to the existing output CSV
+    if os.path.exists(temp_csv_filename):
+        temp_df = pd.read_csv(temp_csv_filename)
+        temp_df.to_csv(csv_filename, mode='a', header=False,
+                       index=False)  # Append without header
 
     # Remove the temporary CSV file
     os.remove(temp_csv_filename)
 
-    print(f"CSV file '{csv_filename}' created successfully.")
+    print(f"CSV file '{csv_filename}' updated successfully.")
 
 
 if __name__ == "__main__":
