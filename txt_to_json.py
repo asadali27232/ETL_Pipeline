@@ -1,7 +1,15 @@
 import google.generativeai as genai
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Access the API key and other variables
+api_key = os.getenv('API_KEY')
 
 # Initialize Groq client
-genai.configure(api_key="AIzaSyB2Xm8_e0RSptXIHel7XDO_CX6BB41hPgE")
+genai.configure(api_key=api_key)
 
 
 def summarize_text(contents):
