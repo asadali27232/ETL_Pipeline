@@ -7,14 +7,6 @@ import json_to_csv
 import append
 
 
-confirmation = input(
-    "Are you sure you have written Extra Append Information (append.txt) in append.txt file? (y/n): ")
-
-if confirmation.lower() != 'y':
-    print("Please write Extra Append Information in append.txt file and run the program again.")
-    exit()
-
-
 # Define directories
 txt_dir = 'txts/'
 json_dir = 'jsons/'
@@ -23,6 +15,19 @@ json_processed_dir = 'json_processed/'
 
 error_log_file = 'errors.log'
 csv_filename = 'University'
+append_filename = 'append.txt'
+
+
+confirmation = input(
+    "Are you sure you have written Extra Append Information (append.txt) in append.txt file? (y/n): ")
+
+if not os.path.exists(append_filename):
+    with open(append_filename, 'w', encoding='utf-8') as error_log:
+        pass
+
+if confirmation.lower() != 'y':
+    print("Please write Extra Append Information in append.txt file and run the program again.")
+    exit()
 
 
 # Get and clean the CSV filename from the user in one line
@@ -44,7 +49,7 @@ os.makedirs(json_processed_dir, exist_ok=True)
 # Create error log file if it doesn't exist
 if not os.path.exists(error_log_file):
     with open(error_log_file, 'w', encoding='utf-8') as error_log:
-        error_log.write("Error Log\n")
+        pass
 
 
 def process_text_files():
