@@ -1,12 +1,7 @@
 import google.generativeai as genai
-import os
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
 
 # Access the API key and other variables
-api_key = os.getenv('API_KEY')
+api_key = "your_api_key_of_gemini"
 
 # Initialize Groq client
 genai.configure(api_key=api_key)
