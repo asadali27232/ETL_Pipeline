@@ -1,4 +1,4 @@
-# Text Processing and Summarization Tool
+# Text Processing, Summarization and Conversion Tool
 
 ## Version: 2.0
 
