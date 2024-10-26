@@ -40,3 +40,5 @@ json_processed
 /json_processed
 
 .env
+
+output/
