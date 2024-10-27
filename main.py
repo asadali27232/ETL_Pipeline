@@ -14,17 +14,12 @@ json_dir = 'jsons/'
 processed_txt_dir = 'txt_processed/'
 json_processed_dir = 'json_processed/'
 
-error_log_file = 'errors.log'
 csv_filename = 'University'
 append_filename = 'append.txt'
 
 
 confirmation = input(
     "Are you sure you have written Extra Append Information (append.txt) in append.txt file? (y/n): ")
-
-if not os.path.exists(append_filename):
-    with open(append_filename, 'w', encoding='utf-8') as error_log:
-        pass
 
 if confirmation.lower() != 'y':
     print("Please write Extra Append Information in append.txt file and run the program again.")
@@ -47,67 +42,60 @@ os.makedirs(processed_txt_dir, exist_ok=True)
 os.makedirs(txt_dir, exist_ok=True)
 os.makedirs(json_processed_dir, exist_ok=True)
 
-# Create error log file if it doesn't exist
-if not os.path.exists(error_log_file):
-    with open(error_log_file, 'w', encoding='utf-8') as error_log:
-        pass
-
 
 def process_text_files():
     # Open error log file
-    with open(error_log_file, 'a', encoding='utf-8') as error_log:
-        # Loop through each text file in the directory
-        for filename in os.listdir(txt_dir):
-            if filename.endswith('.txt'):
-                txt_path = os.path.join(txt_dir, filename)
-                json_filename = os.path.splitext(filename)[0] + '.json'
-                json_path = os.path.join(json_dir, json_filename)
+    # Loop through each text file in the directory
+    for filename in os.listdir(txt_dir):
+        if filename.endswith('.txt'):
+            txt_path = os.path.join(txt_dir, filename)
+            json_filename = os.path.splitext(filename)[0] + '.json'
+            json_path = os.path.join(json_dir, json_filename)
+
+            try:
+                # Read the content from the text file
+                with open(txt_path, 'r', encoding="utf-8") as file:
+                    contents = file.read()
 
                 try:
-                    # Read the content from the text file
-                    with open(txt_path, 'r', encoding="utf-8") as file:
-                        contents = file.read()
+                    # Summarize the text
+                    summary = txt_to_json.summarize_text(contents)
 
                     try:
-                        # Summarize the text
-                        summary = txt_to_json.summarize_text(contents)
+                        # Ensure summary is in JSON format
+                        summary_json = json.loads(summary)
+                    except json.JSONDecodeError:
+                        print(f"Error decoding JSON for {
+                            filename}. Saving raw summary.\n")
+                        summary_json = summary  # Use raw summary if JSON decoding fails
 
-                        try:
-                            # Ensure summary is in JSON format
-                            summary_json = json.loads(summary)
-                        except json.JSONDecodeError:
-                            error_log.write(f"Error decoding JSON for {
-                                            filename}. Saving raw summary.\n")
-                            summary_json = summary  # Use raw summary if JSON decoding fails
+                    # Save the summary to a JSON file
+                    with open(json_path, 'w', encoding='utf-8') as file:
+                        json.dump(summary_json, file,
+                                  ensure_ascii=False, indent=4)
 
-                        # Save the summary to a JSON file
-                        with open(json_path, 'w', encoding='utf-8') as file:
-                            json.dump(summary_json, file,
-                                      ensure_ascii=False, indent=4)
+                    print(f"Summarized {filename} and saved summary to {
+                          json_filename}")
 
-                        print(f"Summarized {filename} and saved summary to {
-                              json_filename}")
-
-                        # Move processed text file to the processed folder
-                        shutil.move(txt_path, os.path.join(
-                            processed_txt_dir, filename))
-
-                    except Exception as e:
-                        error_message = f"Error summarizing {filename}: {e}\n"
-                        error_log.write(error_message)
+                    # Move processed text file to the processed folder
+                    shutil.move(txt_path, os.path.join(
+                        processed_txt_dir, filename))
 
                 except Exception as e:
-                    error_message = f"Error reading {filename}: {e}\n"
-                    error_log.write(error_message)
+                    error_message = f"Error summarizing {filename}: {e}\n"
+                    print(error_message)
+
+            except Exception as e:
+                error_message = f"Error reading {filename}: {e}\n"
+                print(error_message)
 
 
 def process_json_files():
     try:
         json_to_csv.process(json_dir, csv_filename=csv_filename)
     except Exception as e:
-        with open(error_log_file, 'a', encoding='utf-8') as error_log:
-            error_message = f"Error processing JSON files: {e}\n"
-            error_log.write(error_message)
+        error_message = f"Error processing JSON files: {e}\n"
+        print(error_message)
 
 
 # Repeat the process until both directories are empty

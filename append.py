@@ -23,7 +23,7 @@ def append_to_txts(txt_folder="txts", append_file="append.txt"):
 
             # Append only if the content was not found
             with open(file_path, 'a', encoding='utf-8') as f:
-                f.write("\n\n")  # Add some space before appending
+                f.write("\n\n\n")  # Add some space before appending
                 f.write(append_content)
 
             print(f"Appended content to {filename}")
