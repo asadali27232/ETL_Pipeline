@@ -5,6 +5,7 @@ import shutil
 import txt_to_json
 import json_to_csv
 import append
+import finalizer
 
 
 # Define directories
@@ -37,8 +38,8 @@ csv_filename = re.sub(r'[^a-zA-Z0-9 ]', '', str(input(
 csv_filename = csv_filename + ' Courses.csv'
 
 append.append_to_txts()
-print(f"CSV filename set to: {csv_filename}")
 
+print(f"CSV filename set to: {csv_filename}")
 
 # Create directories if they don't exist
 os.makedirs(json_dir, exist_ok=True)
@@ -118,4 +119,5 @@ while True:
     # Break the loop if both directories are empty
     if not os.listdir(txt_dir):
         print("All files processed successfully.")
+        finalizer.remove_duplicates(csv_filename)
         break
