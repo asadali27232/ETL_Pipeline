@@ -1,7 +1,7 @@
 {
     "Course Link": "The direct URL to the course page. Do not include any additional information or text.",
 
-    "Course Title": "The complete title of the course along with its level, if available (e.g., 'MSc in Computer Science Level 9'). If the title is not explicitly stated, summarize it based on the available text. If no title can be derived, use 'NA'.",
+    "Course Title": "The complete title of the course along with its level, if available (e.g., 'MSc in Computer Science Level 9'). Write degree level in the name first and then add degree name like BS Accoounting not Accoounting BS If the title is not explicitly stated, summarize it based on the available text. If no title can be derived, use 'NA'.",
 
     "Required IELTS Score": "The minimum IELTS score required for the course, specifying the overall score and, if applicable, the minimum scores for each section (e.g., 'Overall: 6.5, Reading: 6.0'). If only the overall score is provided, include that. If no score is mentioned, indicate 'NA'.",
 
@@ -9,7 +9,7 @@
 
     "Required TOEFL Score": "The required TOEFL score for the course, detailing the overall score and any minimum section scores available (e.g., 'Overall: 80, Speaking: 20'). If only the overall score is provided, include that. If the information is not available, write 'NA'.",
 
-    "Entry Requirement": "A detailed summary of the qualifications needed for admission (minimum 100 words), including standardized test scores such as GCE A Levels, International Baccalaureate, GRE, GMAT, or other specific such tests. Mention any specific subject requirements and general educational qualifications. Ensure the summary is concise and informative. Specifically menstion any information related to the Pakistan or is under Pakistan Requirements.",
+    "Entry Requirement": "A detailed summary of the qualifications needed for admission (minimum 100 words), including standardized test scores such as GCE A Levels, International Baccalaureate, GRE, GMAT, or other specific such tests. Mention any specific subject requirements and general educational qualifications. Ensure the summary is concise and informative. Specifically menstion any information related to the Pakistan or is under Pakistan Requirements Heading.",
 
     "Education Level": "Specify the level of education appropriate for the course, choosing from 'Undergraduate', 'Master', or 'PhD'. If not directly stated, deduce from the context of the provided information.",
 

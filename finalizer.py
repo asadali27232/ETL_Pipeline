@@ -38,3 +38,4 @@ def remove_duplicates(file_path, delimiter=','):
 
 if __name__ == '__main__':
     remove_duplicates("output.csv")
+
