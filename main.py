@@ -20,7 +20,6 @@ append_filename = 'append.txt'
 
 confirmation = input(
     "Are you sure you have written Extra Append Information (append.txt) in append.txt file? (y/n): ")
-
 if confirmation.lower() != 'y':
     print("Please write Extra Append Information in append.txt file and run the program again.")
     exit()
