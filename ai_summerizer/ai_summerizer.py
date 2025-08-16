@@ -8,41 +8,7 @@ import ai_summerizer.modules.append as append
 import ai_summerizer.modules.finalizer as finalizer
 
 
-# Define directories
-txt_dir = 'txts/'
-json_dir = 'jsons/'
-processed_txt_dir = 'txt_processed/'
-json_processed_dir = 'json_processed/'
-
-csv_filename = 'University'
-append_filename = 'append.txt'
-
-
-confirmation = input(
-    "Are you sure you have written Extra Append Information (append.txt) in append.txt file? (y/n): ")
-if confirmation.lower() != 'y':
-    print("Please write Extra Append Information in append.txt file and run the program again.")
-    exit()
-
-
-# Get and clean the CSV filename from the user in one line
-csv_filename = re.sub(r'[^a-zA-Z0-9 ]', '', str(input(
-    "Enter the name of the current University): ")).strip())
-
-csv_filename = csv_filename + ' Courses.csv'
-
-append.append_to_txts()
-
-print(f"CSV filename set to: {csv_filename}")
-
-# Create directories if they don't exist
-os.makedirs(json_dir, exist_ok=True)
-os.makedirs(processed_txt_dir, exist_ok=True)
-os.makedirs(txt_dir, exist_ok=True)
-os.makedirs(json_processed_dir, exist_ok=True)
-
-
-def process_text_files():
+def process_text_files(txt_dir, json_dir, processed_txt_dir):
     # Open error log file
     # Loop through each text file in the directory
     for filename in os.listdir(txt_dir):
@@ -89,7 +55,7 @@ def process_text_files():
                 print(error_message)
 
 
-def process_json_files():
+def process_json_files(json_dir, csv_filename):
     try:
         json_to_csv.process(json_dir, csv_filename=csv_filename)
     except Exception as e:
@@ -98,11 +64,45 @@ def process_json_files():
 
 
 def run():
+
+    # Define directories
+    txt_dir = 'txts/'
+    json_dir = 'jsons/'
+    processed_txt_dir = 'txt_processed/'
+    json_processed_dir = 'json_processed/'
+
+    csv_filename = 'University'
+    append_filename = './modules/helpers/append.txt'
+
+
+    confirmation = input(
+        "Are you sure you have written Extra Append Information (append.txt) in append.txt file? (y/n): ")
+    if confirmation.lower() != 'y':
+        print("Please write Extra Append Information in append.txt file and run the program again.")
+        exit()
+
+
+    # Get and clean the CSV filename from the user in one line
+    csv_filename = re.sub(r'[^a-zA-Z0-9 ]', '', str(input(
+        "Enter the name of the current University): ")).strip())
+
+    csv_filename = csv_filename + ' Updated Courses.csv'
+
+    append.append_to_txts(txt_folder="txts", append_file=append_filename)
+
+    print(f"CSV filename set to: {csv_filename}")
+
+    # Create directories if they don't exist
+    os.makedirs(json_dir, exist_ok=True)
+    os.makedirs(processed_txt_dir, exist_ok=True)
+    os.makedirs(txt_dir, exist_ok=True)
+    os.makedirs(json_processed_dir, exist_ok=True)
+
     # Repeat the process until both directories are empty
     while True:
         # Process the files in txts directory
         process_text_files()
-        process_json_files()
+        process_json_files(json_dir, csv_filename)
 
         # Break the loop if both directories are empty
         if not os.listdir(txt_dir):

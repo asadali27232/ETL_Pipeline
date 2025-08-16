@@ -8,10 +8,10 @@ with open(".env", "r", encoding="utf-8") as f:
 client = genai.Client(api_key=random.choice(api_keys))
 
 
-def summarize_text(contents):
+def summarize_text(contents, response_schema=None):
     """Summarize the text content using the provided summary format."""
 
-    with open("response_schema.json", "r", encoding="utf-8") as f:
+    with open("./helpers_response_schema.json", "r", encoding="utf-8") as f:
         response_schema = json.load(f)
 
     # ------------ Prepare Prompt ------------
