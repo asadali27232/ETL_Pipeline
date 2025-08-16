@@ -15,6 +15,7 @@ env/
 
 # Data files
 *.csv
+*.json
 
 
 # IDE and editor settings
