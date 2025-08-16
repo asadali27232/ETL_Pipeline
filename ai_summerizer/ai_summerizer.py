@@ -55,9 +55,10 @@ def process_text_files(txt_dir, json_dir, processed_txt_dir):
                 print(error_message)
 
 
-def process_json_files(json_folder, csv_filename, reference_file):
+def process_json_files(json_folder, json_processed_folder, txts_folder, txt_processed_folder, csv_filename, reference_file):
     try:
-        json_to_csv.process(json_folder, csv_filename, reference_file)
+        json_to_csv.process(json_folder, json_processed_folder, txts_folder,
+                            txt_processed_folder, csv_filename, reference_file)
     except Exception as e:
         error_message = f"Error processing JSON files: {e}\n"
         print(error_message)
@@ -101,7 +102,8 @@ def run():
     while True:
         # Process the files in txts directory
         process_text_files(txt_dir, json_dir, processed_txt_dir)
-        process_json_files(json_dir, csv_filename, reference_file)
+        process_json_files(json_dir, json_processed_dir, txt_dir,
+                           processed_txt_dir,  csv_filename, reference_file)
 
         # Break the loop if both directories are empty
         if not os.listdir(txt_dir):

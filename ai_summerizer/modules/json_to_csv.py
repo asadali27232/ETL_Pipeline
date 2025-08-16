@@ -4,7 +4,7 @@ import os
 import shutil
 
 
-def process(json_folder="jsons", csv_filename="output.csv", reference_file="prompt.json"):
+def process(json_folder, json_processed_folder, txts_folder, txt_processed_folder, csv_filename, reference_file):
     """
     Convert multiple JSON files in a folder into a single CSV file using a reference file's keys as headers.
     If a JSON file is invalid or has mismatched keys, it is skipped.
@@ -14,12 +14,8 @@ def process(json_folder="jsons", csv_filename="output.csv", reference_file="prom
     with open(reference_file, "r", encoding="utf-8") as ref_file:
         reference_keys = list(json.load(ref_file).keys())
 
-    processed_folder = "json_processed"
-    txt_processed_folder = "txt_processed"
-    txts_folder = "txts"
-
     # Ensure required folders exist
-    os.makedirs(processed_folder, exist_ok=True)
+    os.makedirs(json_processed_folder, exist_ok=True)
     os.makedirs(txt_processed_folder, exist_ok=True)
     os.makedirs(txts_folder, exist_ok=True)
 
@@ -70,7 +66,7 @@ def process(json_folder="jsons", csv_filename="output.csv", reference_file="prom
 
                 # Move processed JSON and .txt files
                 shutil.move(json_path, os.path.join(
-                    processed_folder, filename))
+                    json_processed_folder, filename))
                 if os.path.exists(txt_path_original):
                     shutil.move(txt_path_original, txt_path_processed)
                 print(f"Processed and moved: {filename}")
