@@ -1,43 +1,38 @@
-import google.generativeai as genai
+import random
+import json
+from google import genai
+
 
 # Access the API key and other variables
 api_key = "AIzaSyAMlK4GUeOfafMLKejsUQHPoGyLuVd6jMI"
 
-# Initialize Groq client
-genai.configure(api_key=api_key)
+with open(".env", "r", encoding="utf-8") as f:
+    api_keys = f.readlines()
+
+client = genai.Client(api_key=random.choice(api_keys))
 
 
 def summarize_text(contents):
     """Summarize the text content using the provided summary format."""
 
-    # Read a INSTRUCTIONS from a txt file
-    with open('prompt.json', 'r', encoding='utf-8') as file:
-        instructions = file.read()
+    with open("response_schema.json", "r", encoding="utf-8") as f:
+        response_schema = json.load(f)
 
-    prompt = "\n\nDEGREE/COURSE DETAILS FROM University Website:\n\n" + \
-        contents + "\n\n" + "Instructions to fill up JSON" + instructions + "\n\n" + \
-        "Please summarize the above detailed text into JSON format according to the instructions provided as value for every key. Write the content in a way that we can upload this json directly to our live webiste dont make such sentences that are just to read by human like no such thing is provided in text etc. do not say this man The provided text does not contain.......!"
+    # ------------ Prepare Prompt ------------
 
-    # Create the model
-    generation_config = {
-        "temperature": 1,
-        "top_p": 1,
-        "top_k": 40,
-        "max_output_tokens": 8192,
-        "response_mime_type": "application/json",
-    }
+    prompt = f"DEGREE/COURSE DETAILS FROM University Website:\n\n{contents}\n\nPlease try to stick to given context. Write the content in a way that we can upload this json directly to our live webiste don't make such sentences that are just to read by human like no such thing is provided in text etc. Do not say this; The provided text does not contain and no information found, etc. Simply say NA is not found or not applicable!"
 
-    model = genai.GenerativeModel(
-        model_name="gemini-2.5-flash-lite",
-        generation_config=generation_config,
+    # ------------ Call the API ------------
+
+    response = client.models.generate_content(
+        model="gemini-2.5-pro",
+        contents=prompt,
+        config={
+            "response_mime_type": "application/json",
+            "response_schema": response_schema
+        }
     )
 
-    chat_session = model.start_chat(
-        history=[
-        ]
-    )
-
-    response = chat_session.send_message(prompt)
     return response.text
 
 
@@ -45,5 +40,5 @@ if __name__ == '__main__':
     summary = summarize_text("Example text to summarize")
 
     # Write the summary to a JSON file
-    with open('summary.json', 'w', encoding='utf-8') as file:
+    with open('gemini_test.json', 'w', encoding='utf-8') as file:
         file.write(summary)
