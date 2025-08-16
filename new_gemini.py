@@ -1,7 +1,13 @@
-from google import genai
+import random
 import json
+from google import genai
 
-client = genai.Client(api_key="AIzaSyAMlK4GUeOfafMLKejsUQHPoGyLuVd6jMI")
+with open(".env", "r", encoding="utf-8") as f:
+    api_keys = f.readlines()
+
+client = genai.Client(api_key=random.choice(api_keys))
+
+# ------------ Simple Test ------------
 
 # response = client.models.generate_content(
 #     model="gemini-2.5-flash",
@@ -34,4 +40,14 @@ response = client.models.generate_content(
 
 # ------------ Output ------------
 
-print(response.text)
+try:
+    data = json.loads(response.text)   # convert string → dict
+except json.JSONDecodeError:
+    print("⚠️ Response was not valid JSON, saving raw text instead.")
+    data = response.text
+
+# Save to response.json
+with open("response.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, indent=4, ensure_ascii=False)
+
+print("✅ Saved response to response.json")
