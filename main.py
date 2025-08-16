@@ -64,8 +64,7 @@ def process_text_files():
                         # Ensure summary is in JSON format
                         summary_json = json.loads(summary)
                     except json.JSONDecodeError:
-                        print(f"Error decoding JSON for {
-                            filename}. Saving raw summary.\n")
+                        print(f"Error decoding JSON for {filename}. Saving raw summary.")
                         summary_json = summary  # Use raw summary if JSON decoding fails
 
                     # Save the summary to a JSON file
@@ -73,8 +72,7 @@ def process_text_files():
                         json.dump(summary_json, file,
                                   ensure_ascii=False, indent=4)
 
-                    print(f"Summarized {filename} and saved summary to {
-                          json_filename}")
+                    print(f"Summarized {filename} and saved summary to {json_filename}")
 
                     # Move processed text file to the processed folder
                     shutil.move(txt_path, os.path.join(
