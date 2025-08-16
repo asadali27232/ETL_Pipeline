@@ -26,7 +26,7 @@ class CoursesSpider(scrapy.Spider):
         with open(csv_file, newline="", encoding="cp1252", errors="ignore") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                url = list(row.values())[2]  # ✅ first column is the link
+                url = list(row.values())[1]  # ✅ first column is the link
                 self.start_urls.append(url)
                 self.rows.append(row)
 
