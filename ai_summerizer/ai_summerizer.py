@@ -2,10 +2,10 @@ import re
 import os
 import json
 import shutil
-import modules.txt_to_json as txt_to_json
-import modules.json_to_csv as json_to_csv
-import modules.append as append
-import modules.finalizer as finalizer
+import ai_summerizer.modules.txt_to_json as txt_to_json
+import ai_summerizer.modules.json_to_csv as json_to_csv
+import ai_summerizer.modules.append as append
+import ai_summerizer.modules.finalizer as finalizer
 
 
 def process_text_files(txt_dir, json_dir, processed_txt_dir):
@@ -55,25 +55,25 @@ def process_text_files(txt_dir, json_dir, processed_txt_dir):
                 print(error_message)
 
 
-def process_json_files(json_dir, csv_filename):
+def process_json_files(json_folder, csv_filename, reference_file):
     try:
-        json_to_csv.process(json_dir, csv_filename=csv_filename)
+        json_to_csv.process(json_folder, csv_filename, reference_file)
     except Exception as e:
         error_message = f"Error processing JSON files: {e}\n"
         print(error_message)
 
 
 def run():
-
     # Define directories
-    txt_dir = 'txts/'
-    json_dir = 'jsons/'
-    processed_txt_dir = 'txt_processed/'
-    json_processed_dir = 'json_processed/'
+    txt_dir = './ai_summerizer/txts/'
+    json_dir = './ai_summerizer/jsons/'
+    processed_txt_dir = './ai_summerizer/txt_processed/'
+    json_processed_dir = './ai_summerizer/json_processed/'
 
-    csv_filename = 'University'
-    append_filename = './modules/helpers/append.txt'
+    reference_file = './ai_summerizer/modules/helpers/reference.json'
 
+    csv_filename = './Updated_Universities/'
+    append_filename = './ai_summerizer/modules/helpers/append.txt'
 
     confirmation = input(
         "Are you sure you have written Extra Append Information (append.txt) in append.txt file? (y/n): ")
@@ -81,14 +81,13 @@ def run():
         print("Please write Extra Append Information in append.txt file and run the program again.")
         exit()
 
-
     # Get and clean the CSV filename from the user in one line
-    csv_filename = re.sub(r'[^a-zA-Z0-9 ]', '', str(input(
-        "Enter the name of the current University): ")).strip())
+    csv_filename_imput = re.sub(r'[^a-zA-Z0-9 ]', '', str(input(
+        "Enter the name of the current University: ")).strip())
 
-    csv_filename = csv_filename + ' Updated Courses.csv'
+    csv_filename = csv_filename + csv_filename_imput + ' Updated Courses.csv'
 
-    append.append_to_txts(txt_folder="txts", append_file=append_filename)
+    append.append_to_txts(txt_folder=txt_dir, append_file=append_filename)
 
     print(f"CSV filename set to: {csv_filename}")
 
@@ -101,8 +100,8 @@ def run():
     # Repeat the process until both directories are empty
     while True:
         # Process the files in txts directory
-        process_text_files()
-        process_json_files(json_dir, csv_filename)
+        process_text_files(txt_dir, json_dir, processed_txt_dir)
+        process_json_files(json_dir, csv_filename, reference_file)
 
         # Break the loop if both directories are empty
         if not os.listdir(txt_dir):

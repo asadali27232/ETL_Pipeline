@@ -1,7 +1,7 @@
 import os
 
 
-def append_to_txts(txt_folder="txts", append_file="append.txt"):
+def append_to_txts(txt_folder, append_file="append.txt"):
     # Read the content of append.txt
     with open(append_file, 'r', encoding='utf-8') as af:
         append_content = af.read()
