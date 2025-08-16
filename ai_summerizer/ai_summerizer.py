@@ -2,10 +2,10 @@ import re
 import os
 import json
 import shutil
-import ai_summerizer.modules.txt_to_json as txt_to_json
-import ai_summerizer.modules.json_to_csv as json_to_csv
-import ai_summerizer.modules.append as append
-import ai_summerizer.modules.finalizer as finalizer
+import modules.txt_to_json as txt_to_json
+import modules.json_to_csv as json_to_csv
+import modules.append as append
+import modules.finalizer as finalizer
 
 
 def process_text_files(txt_dir, json_dir, processed_txt_dir):
