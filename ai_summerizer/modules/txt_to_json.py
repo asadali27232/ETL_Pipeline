@@ -2,10 +2,6 @@ import random
 import json
 from google import genai
 
-
-# Access the API key and other variables
-api_key = "AIzaSyAMlK4GUeOfafMLKejsUQHPoGyLuVd6jMI"
-
 with open(".env", "r", encoding="utf-8") as f:
     api_keys = f.readlines()
 

@@ -2,10 +2,10 @@ import re
 import os
 import json
 import shutil
-import txt_to_json
-import json_to_csv
-import append
-import finalizer
+import ai_summerizer.modules.txt_to_json as txt_to_json
+import ai_summerizer.modules.json_to_csv as json_to_csv
+import ai_summerizer.modules.append as append
+import ai_summerizer.modules.finalizer as finalizer
 
 
 # Define directories
@@ -64,7 +64,8 @@ def process_text_files():
                         # Ensure summary is in JSON format
                         summary_json = json.loads(summary)
                     except json.JSONDecodeError:
-                        print(f"Error decoding JSON for {filename}. Saving raw summary.")
+                        print(
+                            f"Error decoding JSON for {filename}. Saving raw summary.")
                         summary_json = summary  # Use raw summary if JSON decoding fails
 
                     # Save the summary to a JSON file
@@ -72,7 +73,8 @@ def process_text_files():
                         json.dump(summary_json, file,
                                   ensure_ascii=False, indent=4)
 
-                    print(f"Summarized {filename} and saved summary to {json_filename}")
+                    print(
+                        f"Summarized {filename} and saved summary to {json_filename}")
 
                     # Move processed text file to the processed folder
                     shutil.move(txt_path, os.path.join(
@@ -95,14 +97,15 @@ def process_json_files():
         print(error_message)
 
 
-# Repeat the process until both directories are empty
-while True:
-    # Process the files in txts directory
-    process_text_files()
-    process_json_files()
+def run():
+    # Repeat the process until both directories are empty
+    while True:
+        # Process the files in txts directory
+        process_text_files()
+        process_json_files()
 
-    # Break the loop if both directories are empty
-    if not os.listdir(txt_dir):
-        print("All files processed successfully.")
-        finalizer.remove_duplicates(csv_filename)
-        break
+        # Break the loop if both directories are empty
+        if not os.listdir(txt_dir):
+            print("All files processed successfully.")
+            finalizer.remove_duplicates(csv_filename)
+            break
