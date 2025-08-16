@@ -16,6 +16,7 @@ env/
 # Data files
 *.csv
 *.json
+*.txt
 
 
 # IDE and editor settings
@@ -43,3 +44,5 @@ json_processed
 .env
 
 output/
+*/
+/*
