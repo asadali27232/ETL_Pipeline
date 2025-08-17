@@ -44,13 +44,14 @@ class CoursesSpider(scrapy.Spider):
 
         self.files_saved = 0
 
+
     def start_requests(self):
         for url, row_data in zip(self.start_urls, self.rows):
             yield scrapy.Request(
                 url,
                 callback=self.parse_course,
                 errback=self.handle_error,
-                meta={"row_data": row_data, "original_url": url},
+                meta={"row_data": row_data, "original_url": url, "retry_count": 0},
                 dont_filter=True
             )
 
@@ -88,13 +89,28 @@ class CoursesSpider(scrapy.Spider):
             row_data = response.meta.get('row_data', {})
             self._log_error(row_data, f"❌ Parsing error for {url}: {e}")
 
-    def handle_error(self, failure):
-        """Handles request-level errors (timeouts, 404, etc.)."""
-        row_data = failure.request.meta.get("row_data", {})
-        url = failure.request.meta.get("original_url", "Unknown URL")
-        self._log_error(
-            row_data, f"❌ Request failed for {url}: {failure.value}")
 
+    def handle_error(self, failure):
+        """Handles request-level errors (timeouts, 404, etc.) and retries."""
+        meta = failure.request.meta
+        row_data = meta.get("row_data", {})
+        url = meta.get("original_url", "Unknown URL")
+        retry_count = meta.get("retry_count", 0)
+
+        if retry_count < 3:
+            self.log(f"⚠️ Retry {retry_count + 1} for {url}",
+                    level=scrapy.logformatter.logging.WARNING)
+            yield scrapy.Request(
+                url,
+                callback=self.parse_course,
+                errback=self.handle_error,
+                meta={"row_data": row_data, "original_url": url,
+                    "retry_count": retry_count + 1},
+                dont_filter=True
+            )
+        else:
+            self._log_error(row_data, f"❌ Failed after 3 retries: {url}")
+            
     def _log_error(self, row_data, message: str):
         """Writes errors into a dedicated log file inside the output dir."""
         ts = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
