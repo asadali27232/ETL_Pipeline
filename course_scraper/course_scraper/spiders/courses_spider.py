@@ -4,6 +4,7 @@ import os
 import re
 import random
 import hashlib
+import shutil
 import time
 from datetime import datetime
 
@@ -20,6 +21,12 @@ class CoursesSpider(scrapy.Spider):
         # ✅ folder name = CSV file name (without extension)
         self.csv_file = csv_file
         self.output_dir = os.path.splitext(os.path.basename(csv_file))[0]
+
+        # Remove existing folder if it exists
+        if os.path.exists(self.output_dir):
+            shutil.rmtree(self.output_dir)
+
+        # Create a fresh folder
         os.makedirs(self.output_dir, exist_ok=True)
 
         self.start_urls = []
@@ -44,14 +51,14 @@ class CoursesSpider(scrapy.Spider):
 
         self.files_saved = 0
 
-
     def start_requests(self):
         for url, row_data in zip(self.start_urls, self.rows):
             yield scrapy.Request(
                 url,
                 callback=self.parse_course,
                 errback=self.handle_error,
-                meta={"row_data": row_data, "original_url": url, "retry_count": 0},
+                meta={"row_data": row_data,
+                      "original_url": url, "retry_count": 0},
                 dont_filter=True
             )
 
@@ -89,7 +96,6 @@ class CoursesSpider(scrapy.Spider):
             row_data = response.meta.get('row_data', {})
             self._log_error(row_data, f"❌ Parsing error for {url}: {e}")
 
-
     def handle_error(self, failure):
         """Handles request-level errors (timeouts, 404, etc.) and retries."""
         meta = failure.request.meta
@@ -99,23 +105,23 @@ class CoursesSpider(scrapy.Spider):
 
         if retry_count < 3:
             self.log(f"⚠️ Retry {retry_count + 1} for {url}",
-                    level=scrapy.logformatter.logging.WARNING)
+                     level=scrapy.logformatter.logging.WARNING)
             yield scrapy.Request(
                 url,
                 callback=self.parse_course,
                 errback=self.handle_error,
                 meta={"row_data": row_data, "original_url": url,
-                    "retry_count": retry_count + 1},
+                      "retry_count": retry_count + 1},
                 dont_filter=True
             )
         else:
             self._log_error(row_data, f"❌ Failed after 3 retries: {url}")
-            
+
     def _log_error(self, row_data, message: str):
         """Writes errors into a dedicated log file inside the output dir."""
         ts = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         safe_row = " | ".join(f"{k}={v}" for k, v in row_data.items() if v)
-        log_text = f"[{ts}] {message}\nRow: {safe_row}\n\n"
+        log_text = f"[{ts}] {message}\n\n"
 
         error_file = os.path.join(self.output_dir, "errors.log")
         with open(error_file, "a", encoding="utf-8") as f:
