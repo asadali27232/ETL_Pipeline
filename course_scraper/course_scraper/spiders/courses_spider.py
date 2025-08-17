@@ -117,7 +117,7 @@ class CoursesSpider(scrapy.Spider):
                 dont_filter=True
             )
         else:
-            self._log_error(row_data, f"❌ Failed after 3 retries: {url}")
+            self._log_error(row_data, f"❌ Failed after 5 retries: {url}")
 
     def _log_error(self, row_data, message: str):
         """Writes errors into a dedicated log file inside the output dir."""
