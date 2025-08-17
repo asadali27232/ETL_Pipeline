@@ -42,5 +42,6 @@ json_processed
 /json_processed
 
 .env
-
+Downloaded_Universities/
+Updated_Universities/
 output/
