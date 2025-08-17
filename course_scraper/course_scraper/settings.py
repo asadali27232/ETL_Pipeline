@@ -30,8 +30,9 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Retry settings
 RETRY_ENABLED = True
-RETRY_TIMES = 3
-DOWNLOAD_TIMEOUT = 15
+RETRY_TIMES = 5  # increase retries
+DOWNLOAD_DELAY = 1  # 1-second delay between requests
+DOWNLOAD_TIMEOUT = 30
 
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)

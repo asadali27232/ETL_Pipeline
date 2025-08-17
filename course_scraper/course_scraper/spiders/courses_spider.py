@@ -40,6 +40,8 @@ class CoursesSpider(scrapy.Spider):
                     # take first non-empty value as URL
                     url = next((v for v in row.values()
                                if v and v.strip().startswith("http")), None)
+                    url = url.strip()
+
                     if url:
                         self.start_urls.append(url.strip())
                         self.rows.append(row)
