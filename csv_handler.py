@@ -146,6 +146,3 @@ for url in tqdm(folder_urls, desc="Processing folders", unit="folder"):
     download_folder(folder_id, OUTPUT_DIR)
 
 print("\n✅ All CSVs and Google Sheets have been downloaded successfully!")
-
-
-print("\n✅ All CSVs and Google Sheets have been downloaded successfully!")
