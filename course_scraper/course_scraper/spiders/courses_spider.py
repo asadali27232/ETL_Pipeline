@@ -10,9 +10,6 @@ from parsel import Selector
 from datetime import datetime
 
 
-from tqdm import tqdm
-
-
 class CoursesSpider(scrapy.Spider):
     name = "courses"
 
@@ -22,33 +19,38 @@ class CoursesSpider(scrapy.Spider):
         if not csv_file:
             raise ValueError("You must provide -a csv_file=yourfile.csv")
 
+        # ✅ folder name = CSV file name (without extension)
         self.csv_file = csv_file
         self.output_dir = os.path.splitext(os.path.basename(csv_file))[0]
 
+        # Remove existing folder if it exists
         if os.path.exists(self.output_dir):
             shutil.rmtree(self.output_dir)
+
+        # Create a fresh folder
         os.makedirs(self.output_dir, exist_ok=True)
 
         self.start_urls = []
         self.rows = []
 
-        # open CSV safely
+        # open CSV safely (Excel/Windows friendly)
         with open(csv_file, newline="", encoding="cp1252", errors="ignore") as f:
             reader = csv.DictReader(f)
-            rows = list(reader)
+            for row in reader:
+                try:
+                    # take first non-empty value as URL
+                    url = next((v for v in row.values()
+                               if v and v.strip().startswith("http")), None)
+                    url = url.strip()
 
-        # wrap with tqdm for progress bar
-        for row in tqdm(rows, desc=f"Loading URLs from {csv_file}", unit="row"):
-            try:
-                url = next((v for v in row.values()
-                           if v and v.strip().startswith("http")), None)
-                if url:
-                    self.start_urls.append(url.strip())
-                    self.rows.append(row)
-                else:
-                    self._log_error(row, "❌ No valid link found in row")
-            except Exception as e:
-                self._log_error(row, f"❌ CSV row read error: {e}")
+                    if url:
+                        self.start_urls.append(url.strip())
+                        self.rows.append(row)
+                    else:
+                        # Log invalid row to error file
+                        self._log_error(row, "❌ No valid link found in row")
+                except Exception as e:
+                    self._log_error(row, f"❌ CSV row read error: {e}")
 
         self.files_saved = 0
 
@@ -131,7 +133,7 @@ class CoursesSpider(scrapy.Spider):
                 dont_filter=True
             )
         else:
-            self._log_error(row_data, f"❌ Failed after 5 retries: {url}")
+            self._log_error(row_data, f"❌ Failed after 3 retries: {url}")
 
     def _log_error(self, row_data, message: str):
         """Writes errors into a dedicated log file inside the output dir."""

@@ -24,7 +24,7 @@ RETRY_HTTP_CODES = [500, 502, 503, 504, 522, 524, 408, 429]
 
 # Redirects
 REDIRECT_ENABLED = True
-REDIRECT_MAX_TIMES = 5
+REDIRECT_MAX_TIMES = 10
 
 # Cookies
 COOKIES_ENABLED = False                    # Disable cookies for speed
