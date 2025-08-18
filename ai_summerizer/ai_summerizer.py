@@ -2,10 +2,10 @@ import re
 import os
 import json
 import shutil
-import ai_summerizer.modules.txt_to_json as txt_to_json
-import ai_summerizer.modules.json_to_csv as json_to_csv
-import ai_summerizer.modules.append as append
-import ai_summerizer.modules.finalizer as finalizer
+import modules.txt_to_json as txt_to_json
+import modules.json_to_csv as json_to_csv
+import modules.append as append
+import modules.finalizer as finalizer
 
 
 def process_text_files(txt_dir, json_dir, processed_txt_dir):
@@ -66,15 +66,15 @@ def process_json_files(json_folder, json_processed_folder, txts_folder, txt_proc
 
 def run():
     # Define directories
-    txt_dir = './ai_summerizer/txts/'
-    json_dir = './ai_summerizer/jsons/'
-    processed_txt_dir = './ai_summerizer/txt_processed/'
-    json_processed_dir = './ai_summerizer/json_processed/'
+    txt_dir = './txts/'
+    json_dir = './jsons/'
+    processed_txt_dir = './txt_processed/'
+    json_processed_dir = './json_processed/'
 
-    reference_file = './ai_summerizer/modules/helpers/reference.json'
+    reference_file = './modules/helpers/reference.json'
 
-    csv_filename = './Updated_Universities/'
-    append_filename = './ai_summerizer/modules/helpers/append.txt'
+    csv_filename = './AI_Final_Universities/'
+    append_filename = './modules/helpers/append.txt'
 
     confirmation = input(
         "Are you sure you have written Extra Append Information (append.txt) in append.txt file? (y/n): ")
@@ -110,3 +110,7 @@ def run():
             print("All files processed successfully.")
             finalizer.remove_duplicates(csv_filename)
             break
+
+
+if __name__ == "__main__":
+    run()

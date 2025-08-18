@@ -3,7 +3,7 @@ import json
 import time
 from google import genai
 
-with open("./ai_summerizer/modules/helpers/.env", "r", encoding="utf-8") as f:
+with open("./modules/helpers/.env", "r", encoding="utf-8") as f:
     api_keys = f.readlines()
 
 client = genai.Client(api_key=random.choice(api_keys))
@@ -12,7 +12,7 @@ client = genai.Client(api_key=random.choice(api_keys))
 def summarize_text(contents, response_schema=None):
     """Summarize the text content using the provided summary format."""
 
-    with open("./ai_summerizer/modules/helpers/response_schema.json", "r", encoding="utf-8") as f:
+    with open("./modules/helpers/response_schema.json", "r", encoding="utf-8") as f:
         response_schema = json.load(f)
 
     # ------------ Prepare Prompt ------------
